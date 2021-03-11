@@ -1,0 +1,9 @@
+---
+
+- name: download jdk
+  get_url:
+    url: https://download.oracle.com/otn/java/jdk/8u281-b09/89d678f2be164786b292527658ca1605/jdk-8u281-linux-x64.tar.gz
+    dest: /opt/playbook
+    validate_certs: no
+  delegate_to: localhost
+

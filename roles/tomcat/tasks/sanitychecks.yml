@@ -1,0 +1,28 @@
+---
+- name: check java version
+  shell: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+  register: checkjava
+  ignore_errors: yes
+- debug:
+     msg: java is not insatlleed
+  when: checkjava is failed
+
+- debug:
+     msg: java is installed
+  when: checkjava is success
+
+- name: Identifying version of tomcat
+  shell: '{{ tomcat_bin }}/catalina.sh version | grep version'
+  register: tom
+- debug: msg="{{ tom.stdout  }}"
+
+- name: populate service facts
+  service_facts:
+- debug:
+     var: ansible_facts.services["tomcat.service"]
+- name: checking tomcat service is up or not
+  assert: 
+     that: 
+       - "'{{ ansible_facts.services['tomcat.service'].state }}' == 'running'"
+     fail_msg: "tomcat is not running"
+     success_msg: "tomcat is running"

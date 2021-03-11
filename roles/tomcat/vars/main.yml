@@ -1,0 +1,12 @@
+---
+# vars file for tom
+tomcat_dir: /opt/tomcat
+tomcat_user: tomcat
+tomcat_group: tomcat
+tomcat_version: apache-tomcat-8.5.63
+repo: https://apache.osuosl.org/tomcat/tomcat-8/v8.5.63/bin
+tomcat: /opt/tomcat
+tomcat_bin: /opt/tomcat/bin
+tomcat_up_dir: /usr/bin/tomcatup
+tomcat_down_dir: /usr/bin/tomcatdown
+system_path: /etc/systemd/system/tomcat.service

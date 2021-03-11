@@ -1,0 +1,98 @@
+---
+- name: checking the assert condition
+  assert: { that: "ansible_os_family == 'RedHat'" }
+
+- name: creating a user
+  user:
+     name: tomcat
+
+- name: Create directory to store tomcat binaries
+  file:
+    path: "{{ tomcat_dir }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: 0777
+
+- name: Extract tomcat at host
+  unarchive:
+      src: ' {{ repo }}/{{ tomcat_version }}.tar.gz '
+      dest: "{{tomcat_dir}}"
+      remote_src: yes
+      owner: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+      extra_opts: [--strip-components=1]
+      mode: 0777
+- name: setting tomcat environment
+  template: 
+      src: setenv.j2
+      dest: /opt/tomcat/bin/setenv.sh
+      owner: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+      mode: 0750
+
+- name: creating symbolic link to start service
+  file:
+    src: '{{ tomcat_bin }}/startup.sh'
+    dest: "{{ tomcat_up_dir }}"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    state: link
+    mode: 0777
+
+- name: creating symboilc link to stop services
+  file:
+    src: '{{ tomcat_bin }}/shutdown.sh'
+    dest: "{{ tomcat_down_dir }}"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: 0777
+    state: link
+- name: permisiion to log
+  file:
+    path: /opt/tomcat/logs
+    mode: 0777
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+- name: configuring tomcat-user
+  template:
+        src: user.j2
+        dest: '{{ tomcat }}/conf/tomcat-users.xml'
+
+- name: configuring host manager 
+  template:
+        src: host_Manager.j2
+        dest: '{{ tomcat }}/webapps/host-manager/META-INF/context.xml'
+
+- name: configuring manager
+  template:
+        src: manager.j2
+        dest: '{{ tomcat }}/webapps/manager/META-INF/context.xml'
+
+- name: loading tomcat service
+  template:
+         src: service.j2
+         dest: "{{system_path}}"
+
+- name: adding port to firewall
+  firewalld:
+    port: 8080/tcp
+    permanent: yes
+    state: enabled
+
+- name: reload firewall
+  systemd:
+    name: firewalld
+    state: reloaded
+
+- name: turning on tomcat service
+  systemd:
+     daemon_reload: yes
+     state: started
+     enabled: yes
+     name: tomcat
+- name: turn on
+  service:
+     name: tomcat
+     state: restarted
+

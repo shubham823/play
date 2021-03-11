@@ -1,0 +1,29 @@
+---
+# tasks file for java
+#- name: insatll java
+#  yum: 
+#    name: java-1.8.0-openjdk-devel
+#    state: present
+- name: creating binaries
+  file:
+      path: /usr/java
+      state: directory
+      mode: 0777
+- name: copy 
+  copy:
+    src: jdk-8u281-linux-x64.tar.gz
+    dest: /opt
+ 
+- name: unarchive java .tar
+  unarchive:
+       src: /opt/jdk-8u281-linux-x64.tar.gz
+       dest: /opt
+       mode: 0750
+       remote_src: True
+       extra_opts: [--strip-components=1]
+#- name: setting environment varaible
+#  shell: echo JAVA_HOME is $JAVA_HOME
+#  environment:
+#    JAVA_HOME: /usr/java/bin
+#  register: shellout
+#- debug: var=shellout 

@@ -1,0 +1,32 @@
+---
+# tasks file for check
+- name: check java version
+  shell: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+  register: checkjava
+  ignore_errors: yes
+- debug: msg="{{ checkjava.stdout }}"
+#- name: check java
+#  package_facts:
+#    manager: "auto"
+#- name: check
+#  debug:
+#    msg: "'java' in ansible_facts.package"
+#  when: "'java' in ansible_facts.pacakage"
+#- name: no check
+#  debug: 
+#    msg: "'java' not in ansible_facts.package"
+#  when: "'java' not in ansible_facts.package" 
+#- name: Gather the package facts
+#  ansible.builtin.package_facts:
+#    manager: auto
+#  register: checkjava
+#- name: Print the package facts
+#- debug: msg={{ checkjava }}
+
+
+# debug: 
+##    msg: "'java' in ansible_facts.package"
+#  when: "'java' in ansible_facts.pacakage"
+#- name: check java is not installed 
+#  debug: 
+#    msg: "'java' not in ansible_facts.package"
