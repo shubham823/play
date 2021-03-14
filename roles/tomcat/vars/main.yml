@@ -3,8 +3,8 @@
 tomcat_dir: /opt/tomcat
 tomcat_user: tomcat
 tomcat_group: tomcat
-tomcat_version: apache-tomcat-8.5.63
-repo: https://apache.osuosl.org/tomcat/tomcat-8/v8.5.63/bin
+tomcat_version: apache-tomcat-8.5.64
+repo: https://mirror.jframeworks.com/apache/tomcat/tomcat-8/v8.5.64/bin
 tomcat: /opt/tomcat
 tomcat_bin: /opt/tomcat/bin
 tomcat_up_dir: /usr/bin/tomcatup
